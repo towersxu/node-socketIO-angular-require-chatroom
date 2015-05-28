@@ -1,0 +1,18 @@
+<div id="chatRoom">
+
+    <ul>
+        <li ng-repeat="msg in msgContent">
+            <span>[{{msg.msgHeader}}]</span>
+            <span>{{msg.userName}}</span>:{{msg.content}}
+            <img style="max-width:320px" ng-src="{{msg.img}}">
+            <video width="320" height="240" controls="controls" ng-class="{true:'hidden', false:''}[msg.isHidden]">
+                <source ng-src="{{msg.video | trusted}}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <audio controls="controls" ng-class="{true:'hidden', false:''}[msg.isMusicHidden]">
+                <source ng-src="{{msg.music | trusted}}" type="audio/mpeg">
+                Your browser does not support the audio tag.
+            </audio>
+        </li>
+    </ul>
+</div>

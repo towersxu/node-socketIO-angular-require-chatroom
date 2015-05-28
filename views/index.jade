@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  input(tyep='text',value='ab',id='msgBox')
+  input(tyep='text',value='ba',id='msgBox1')
+  script(src='/javascripts/socket.io.js')
+  script(src='/javascripts/socket-run.js')

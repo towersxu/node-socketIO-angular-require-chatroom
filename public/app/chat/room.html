@@ -1,0 +1,48 @@
+
+<input type="text" value="{{msg}}" ng-model="msg" placeholder="说点什么吧">
+<button ng-click="sendMsg()">公聊</button>
+sendto:
+<select ng-model="myRoomUsers" ng-options="roomUser.userName for roomUser in roomUsers">
+</select>
+<button ng-click="sendPrivate()">发送私聊</button>
+<button ng-click="sendAll()">广播</button>
+<button ngf-select ngf-change="sendMedia($files,'img')">发送图片</button>
+<button ngf-select ngf-change="sendMedia($files,'music')">发送音乐</button>
+<button ngf-select ngf-change="sendMedia($files,'video')">发送视频</button>
+<table class="table">
+    <thead><th>姓名</th><th>ID</th></thead>
+    <tr ng-repeat="roomUser in roomUsers">
+        <td>{{roomUser.userName}}</td>
+        <td>{{roomUser.userId}}</td>
+    </tr>
+</table>
+<div ng-controller="chatListCtrl">
+    <chatroom-list></chatroom-list>
+</div>
+<div ng-controller="chatroomCtrl" class="chatroomWrap">
+    <chatroom></chatroom>
+</div>
+<button ng-click="logoutRoom()">退出房间</button>
+<!--<audio controls="controls">-->
+    <!--<source src="http://127.0.0.1:3000/music/James Blunt - Same Mistake.mp3" type="audio/mpeg">-->
+    <!--Your browser does not support the audio tag.-->
+<!--</audio>-->
+<!--<video width="320" height="240" controls="controls">-->
+    <!--<source ng-src="http://127.0.0.1:3000/video/不将就.mp4" type="video/mp4">-->
+    <!--Your browser does not support the video tag.-->
+<!--</video>-->
+<!--<div>-->
+    <!--watching model:-->
+    <!--<div class="button" ngf-select ng-model="files">Select File</div>-->
+    <!--<div class="button" ngf-select ngf-change="upload($files)">Upload on file change</div>-->
+    <!--Drop File:-->
+    <!--<div ngf-drop ng-model="files" class="drop-box"-->
+         <!--ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="true"-->
+         <!--ngf-accept="'image/*,application/pdf'">Drop Images or PDFs files here</div>-->
+    <!--<div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>-->
+    <!--Files:-->
+    <!--<ul>-->
+        <!--<li ng-repeat="f in files">{{f.name}}</li>-->
+    <!--</ul>-->
+
+<!--</div>-->

@@ -1,0 +1,7 @@
+<div id="chatRoomList">
+    <h1>房间列表</h1>
+<ul>
+    <li><a>房间名</a><span>(用户数)</span>|<span>状态</span>|<a>退出</a> </li>
+    <li ng-repeat="room in msgs"><a href="#/room/{{room.id}}">{{room.name}}</a><span>({{room.onlineUser}})</span> |<span>{{room.isConnect | isConnect}}</span>|<a href="" ng-click="logoutRoom(room.id,room.isConnect)">退出房间</a></li>
+</ul>
+</div>

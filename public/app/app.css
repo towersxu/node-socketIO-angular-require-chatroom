@@ -1,0 +1,71 @@
+/* app css stylesheet */
+
+.menu {
+  list-style: none;
+  border-bottom: 0.1em solid black;
+  margin-bottom: 2em;
+  padding: 0 0 0.5em;
+}
+
+.menu:before {
+  content: "[";
+}
+
+.menu:after {
+  content: "]";
+}
+
+.menu > li {
+  display: inline;
+}
+
+.menu > li:before {
+  content: "|";
+  padding-right: 0.3em;
+}
+
+.menu > li:nth-child(1):before {
+  content: "";
+  padding: 0;
+}
+
+[ng-cloak] {
+    display: none;
+}
+
+#chatRoomList{
+    width: 300px;
+    border: 1px solid #408080;
+    position: fixed;
+    top:50px;
+    background:#efefef;
+    right: 0;
+}
+#chatRoomList h1{
+    color: #245269;
+    font-size: 24px;
+}
+#chatRoomList ul{
+    list-style: none;
+}
+#chatRoomList li{
+    display: block;
+    height: 30px;
+}
+#chatRoomList li a{
+    color: #5cb85c;
+    font-size: 16px;
+}
+#chatRoomList li span{
+    color: red;
+}
+.chatroomWrap{
+    width: 600px;
+}
+.button{
+    -webket-appearance:button;
+    padding: 10px;
+    margin: 10px;
+    width: 100px;
+    border: 1px solid #aeaeae;
+}
