@@ -20,10 +20,10 @@ define(['chat/socket.io'], function(socket) {
 
     $scope.isShowBottom = false;
     $scope.chatMethods = [{"method":"当前房间","chatType":"roomChat","value":$scope.roomId},
-                          {"method":"公告","chatType":"announcement"},
-                          {"method":"私聊","chatType":"private","value":$scope.loginUser.userId}];
+                          {"method":"公告","chatType":"announcement"}];
     $scope.selectedChatMethod = $scope.chatMethods[0];
     $scope.chatContentType = ["文字","图片","视频","音乐"];
+    $scope.inputContent = "";
     $scope.socket.emit('join room',{
       roomId:$scope.roomId,
       userId:$rootScope.loginUser.userId,
@@ -126,33 +126,33 @@ define(['chat/socket.io'], function(socket) {
       msg.content = msg.content || $scope.msg;
       $scope.socket.emit('room chat',msg)
     };
-    $scope.sendPrivate=function(){
-      var message = {};
-      message.form = $rootScope.loginUser;
-      message.to = $scope.myRoomUsers;
-      message.content = $scope.msg;
-      $scope.socket.emit("private message",message);
+    $scope.sendPrivate=function(msg){
+      if(!msg){
+        msg = {};
+      }
+      msg.form = $rootScope.loginUser;
+      msg.to = msg.toUser || $scope.myRoomUsers;
+      msg.content = msg.content || $scope.msg;
+      $scope.socket.emit("private message",msg);
     };
     $scope.socket.on('private message',function(msg){
       msg = hiddenUnUseElement(msg);
-      var privateMsg = {};
-      privateMsg.userName = msg.form.userName;
-      privateMsg.content = msg.content;
-      privateMsg.msgHeader = "私聊";
-      privateMsg.isHidden = msg.isHidden;
-      privateMsg.isMusicHidden = msg.isMusicHidden;
-      $scope.msgContent.push(privateMsg);
+      msg.userName = msg.form.userName;
+      msg.msgHeader = "私聊";
+      $scope.msgContent.push(msg);
       $scope.$apply();
       suitChatList();
     });
 
-    $scope.sendAll = function(){
+    $scope.sendAll = function(msg){
+      if(!msg){
+        msg = {};
+      }
       var message = {};
-      message.form = "管理员";
-      message.content = "demo.png";
-      message.msgHeader = "公告";
-      message.type = "video";
-      $scope.socket.emit("public message",message);
+      msg.form = "管理员";
+      msg.content = msg.content || "";
+      msg.msgHeader = "公告";
+      $scope.socket.emit("public message",msg);
     };
     $scope.socket.on('public message',function(msg){
       msg = hiddenUnUseElement(msg);
@@ -163,8 +163,19 @@ define(['chat/socket.io'], function(socket) {
     });
 
     $scope.sendMedia = function(files,type){
+      var chatType = "words";
+      if($scope.selectedChatMethod.chatType == "roomChat"){
+        chatType="roomChat";
+      }
+      if($scope.selectedChatMethod.chatType == "private"){
+        chatType="private";
+        //$scope.sendPrivate({content:$scope.inputContent,toUser:$scope.selectedChatMethod.value});
+      }
+      if($scope.selectedChatMethod.chatType == "announcement"){
+        chatType="announcement";
+      }
       if(files.length > 0){
-        $scope.upload(files,type);
+        $scope.upload(files,type,chatType);
       }
     };
 
@@ -183,7 +194,7 @@ define(['chat/socket.io'], function(socket) {
       var chatMethodsLength = $scope.chatMethods.length,
         index = findNameInChatMethod(roomUser.userName);
       if(index == -1){
-        $scope.chatMethods.push({"method":roomUser.userName,"chatType":"private"});
+        $scope.chatMethods.push({"method":roomUser.userName,"chatType":"private","value":roomUser});
         $scope.selectedChatMethod = $scope.chatMethods[chatMethodsLength];
       }else{
         $scope.selectedChatMethod = $scope.chatMethods[index];
@@ -192,8 +203,17 @@ define(['chat/socket.io'], function(socket) {
     };
 
     $scope.sendChatMsg = function(){
-      console.log($scope.chatMethods);
-      console.log($scope.selectedChatMethod);
+
+      if($scope.selectedChatMethod.chatType == "roomChat"){
+        $scope.sendMsg({content:$scope.inputContent});
+      }
+      if($scope.selectedChatMethod.chatType == "private"){
+        $scope.sendPrivate({content:$scope.inputContent,toUser:$scope.selectedChatMethod.value});
+      }
+      if($scope.selectedChatMethod.chatType == "announcement"){
+        $scope.sendAll({content:$scope.inputContent,type:"words"});
+      }
+      $scope.inputContent = "";
     };
     // because this has happened asynchroneusly we've missed
     // Angular's initial call to $apply after the controller has been loaded

@@ -2,29 +2,116 @@
  * Created by taox on 15-5-20.
  */
 
-var socketIO = require('socket.io');
-var io;
-var room = {
-  id: '',
-  onlineUser: 0,
-  name: ''
-};
-var chatSystemObject = {};
-var roomInfo = {};
-var users = {};
-var sockets = {};
+var socketIO = require('socket.io'),
+  io,
+  /**
+   * @description
+   * @example
+   * chatSystemObject = {
+   *    "roomId1":{
+   *      id:roomId,
+   *      name:roomName,
+   *      roomUsers:[
+   *        "userId1":{
+   *          userId:"userId",
+   *          userName:"userName",
+   *          sockets:[
+   *            "socketId1","socketId",
+   *            "socketId2","socketId"
+   *            ...
+   *          ]
+   *        }
+   *        "userId2":{},
+   *        "userId2":{}
+   *        ...
+   *      ],
+   *      sockets:[
+   *        "socketId",
+   *        "socketId2",
+   *        "socketId3"
+   *        ...
+   *      ]
+   *    }
+   *    "roomId2":{},
+   *    "roomId3":{}
+   *    ...
+   * }
+   * @type {object}
+   */
+  chatSystemObject = {},
+  /**
+   * @example
+   * roomInfo = {
+   *    "roomId1":{
+   *      id:"roomId",
+   *      name:"roomName",
+   *      onlineUser:number
+   *    },
+   *    "roomId2":{},
+   *    "roomId2":{}
+   * }
+   * @type {{}}
+   */
+  roomInfo = {},
+  /**
+   * the prototype of roomInfo
+   * @type {{id: string, onlineUser: number, name: string}}
+   */
+  room = {
+    id: '',
+    onlineUser: 0,
+    name: ''
+  },
+  /**
+   * @example
+   * users = {
+   *  "userId1":{
+   *    userId:UserId,
+   *    userName:userName,
+   *    sockets:[
+   *      socketId,
+   *      socketId2,
+   *      ...
+   *    ]
+   *  }
+   *  "userId2":{},
+   *  "userId3":{},
+   *  "userId4":{}
+   * }
+   * @type {{}}
+   */
+  users = {},
+  /**
+   * @example
+   * socket = {
+   *  "socketId":{
+   *    socket:"socketObject",
+   *    userId:"userId",
+   *    roomId:[
+   *      "roomId1",
+   *      "roomId2",
+   *      "roomId3",
+   *      ...
+   *    ]
+   *  }
+   * }
+   * @type {{}}
+   */
+  sockets = {};
+
 exports.setChatRoom = function (roomArr, server) {
   for (var i = 0; i < roomArr.length; i++) {
     var obj = Object.create(room);
     obj.id = roomArr[i].id;
     obj.name = roomArr[i].name;
     obj.onlineUser = 0;
-    roomInfo[roomArr[i].id] = obj;
+    roomInfo[roomArr[i].id] = obj;  //将roomArr对象克隆一份给roomInfo单独的统计每个在线人数。
 
-    chatSystemObject[roomArr[i].id] = roomArr[i];
+    chatSystemObject[roomArr[i].id] = roomArr[i];//将roomArr对象作为chatSystemObject的一个子对象。
     chatSystemObject[roomArr[i].id].roomUsers = [];
     chatSystemObject[roomArr[i].id].sockets = [];
   }
+
   initServer(server);
 };
 
@@ -51,17 +138,15 @@ function updataRoomInfo(){
   io.emit('room info', roomInfo);
 }
 /**
- * @description get room list by use socket
+ * @description
  * @param socket
  */
 function initGetRoomList(socket){
-  socket.on("room list",function(msg){
-    console.log("get request room list");
+  socket.on("room list",function(){
     socket.emit('room info',roomInfo);
   });
 }
 /**
- * update chatSystenObject[roomId]
  * @param roomId
  * @param userId
  * @param socketId
@@ -163,17 +248,14 @@ function removeSocketFromSockets(socketId){
 function removeRoomFromSockets(socketId,roomId){
   var socketObject = sockets[socketId] || {},
     socketRoom = socketObject.roomId || [];
-  console.log("this is socket room id");
-  console.log(socketRoom);
-  console.log(roomId);
   socketRoom.splice(socketRoom.indexOf(roomId+''),1);
-  console.log(socketRoom);
 }
 /**
  * 加入room操作
  * @param socket
  */
 function joinRoom(socket){
+
   socket.on("join room",function(msg){
     //用users中或取当前进入房间用户。
     var userId = msg.userId,
@@ -181,13 +263,13 @@ function joinRoom(socket){
       userName = msg.userName,
       user = users[userId] || {};
 
-    //如果该用户不存在,创建该用户。
+    //如果该用户不存在users中,创建该用户。
     if (!user.userId) {
       user.userName = userName;
       user.userId = userId;
-      user.sockets = []; //存放该用户的sockets连接。
+      user.sockets = []; //存放该用户的所有sockets连接的Id。
     }
-    if(user.sockets.indexOf(socket.id) === -1){
+    if(user.sockets.indexOf(socket.id) === -1){ //同一个页面连接多个房间时，只保存该socketId一次。
       user.sockets.push(socket.id);
     }
     //更新用户集合对象users
@@ -200,7 +282,7 @@ function joinRoom(socket){
     addUserToRoomUsers(roomId,userId,userName,socket.id);
     //显示房间在线用户
     responseToRoomUsers(roomId);
-    //显示用户当前socket所连接的房间
+    //发送用户当前socket所连接的所有房间。
     sendUserRoomList(socket.id);
   })
 }
@@ -237,8 +319,10 @@ function responseToRoomUsers(roomId){
 /**
  *
  * @param socketsArr
- * @param userinfo
+ * @param userId
+ * @param userName
  * @param type
+ * @param msgHeader
  */
 function responseToJoinUser(socketsArr,userId,userName,type,msgHeader){
   var i = 0,
@@ -257,12 +341,12 @@ function responseToJoinUser(socketsArr,userId,userName,type,msgHeader){
 function initRoomChat(socket){
   socket.on("room chat", function (msg) {
     var roomId = msg.roomId,
-      socketsArr = chatSystemObject[roomId].sockets,
+      socketsArr = chatSystemObject[roomId].sockets,//所有连接到该房间的socketId
       length = socketsArr.length,
       i = 0;
     msg.msgHeader = roomInfo[roomId].name;
     for(;i<length;i++){
-      sockets[socketsArr[i]].socket.emit('room chat',msg)
+      sockets[socketsArr[i]].socket.emit('room chat',msg);
     }
   });
 }
@@ -271,38 +355,23 @@ function initPrivateChat(socket){
   socket.on("private message",function(msg){
     var userReceiveId = msg.to.userId,
       receiveUser = users[userReceiveId] || {},
-      receiveSockets = receiveUser.sockets || [],
+      receiveSockets = receiveUser.sockets || [],//该用户的所有socket连接.
       len = receiveSockets.length,
       i = 0;
     if(len > 0){
       for(;i<len;i++) {
         sockets[receiveSockets[i]].socket.emit("private message", msg);
       }
+      //将私聊内容同时发送给发送者一份。
+      socket.emit("private message", msg);
     }else{
-      console.log("user can not receive message");
+      msg.content = "发送失败，"+msg.to.userName+"已经离开。";
+      sockets.emit("private message", msg);
     }
 
   });
 }
 
-/**
- * user leave room
- * @param socket
- */
-function leaveRoom(socketId){
-  var socketObject = sockets[socketId] || {},
-    userId = socketObject.userId,
-    roomIds = socketObject.roomId; //Array
-  if(userId){
-    //移除sockets下该用户的连接。
-    removeSocketFromSockets(socketId);
-    //删除users下该用户的连接。
-    removeSocketFromUsers(userId,socketId);
-    //删除roomUsers下该用户的连接。
-    removeSocketFromRoomUsers(roomIds,userId,socketId);
-
-  }
-}
 function initDisconnect(socket){
   //用户点击退出房间。在应用层断开连接。
   socket.on('leave room',function(msg){
@@ -321,12 +390,20 @@ function initDisconnect(socket){
     }
   });
   //用户刷新或关闭浏览器。在物理层断开连接。会断开用户连接的所有房间。
-  socket.on('disconnect',function(msg){
+  socket.on('disconnect',function(){
     console.log('user disconnected');
-    console.log(arguments);
-    console.log(socket.id);
-    leaveRoom(socket.id);
-
+    var socketId = socket.id,
+      socketObject = sockets[socketId] || {},
+      userId = socketObject.userId,
+      roomIds = socketObject.roomId; //Array
+    if(userId){
+      //移除sockets下该用户的连接。
+      removeSocketFromSockets(socketId);
+      //删除users下该用户的连接。
+      removeSocketFromUsers(userId,socketId);
+      //删除roomUsers下该用户的连接。
+      removeSocketFromRoomUsers(roomIds,userId,socketId);
+    }
   });
 
 }
@@ -335,22 +412,29 @@ function initPublicChat(socket){
     io.emit("public message",msg);
   });
 }
+/**
+ * 初始化websocket。
+ * @param server
+ */
 function initServer(server) {
   io = socketIO(server);
   io.on('connection', function (socket) {
     //io.emit('room info', roomInfo);
     console.log("user connected");
     console.log(socket.id);
+    //启动获取房间列表socket监听。
     initGetRoomList(socket);
+    //启动加入房间socket监听。
     joinRoom(socket);
+    //启动房间聊天socket监听。
     initRoomChat(socket);
+    //启动私聊socket监听。
     initPrivateChat(socket);
+    //启动公告socket监听
     initPublicChat(socket);
+    //启动断开连接socket监听
     initDisconnect(socket);
 
-  });
-  io.on('disconnet',function(){
-    console.log("io disconneted");
   });
   console.log('init chatServer success');
 }

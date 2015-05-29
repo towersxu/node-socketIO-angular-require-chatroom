@@ -113,11 +113,11 @@
     font-size: 18px;
 }
 .sendTextBox{
-    width: 413px;
+    width: 370px;
     text-indent: 20px;
 }
 .sendButton{
-    width: 80px;
+    width: 100px;
     padding: 0;
     margin: 0;
     display: inline-block;

@@ -19,7 +19,9 @@ exports.connect =  function(server){
       console.log(err);
       throw  err;
     }
+    //使用自定义房间方式。
     chatserver.setChatRoom(rows,server);
+    //使用房间和namespace对应方式实现聊天。
     //chatroomServer.initChatRoom(rows,server);
   });
 

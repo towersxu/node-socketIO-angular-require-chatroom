@@ -22,15 +22,15 @@ define([
 			// Furthermore we need to pass on the $scope as it's unique to this controller
 			$injector.invoke(ctrl2, this, {'$scope': $scope});
 		});
-      $scope.username = "please input username";
-      $scope.userId = "please input user id";
+      $scope.username = "";
+      $scope.userId = "";
       $scope.loginUser = $cookieStore.get('userinfo');
       $scope.setCookie = function () {
         var user = {};
         user.userName = $scope.username;
         user.userId = $scope.userId;
         $cookieStore.put('userinfo',user);
-
+        window.location.reload();
       };
       //require(['socket.io.js'],function(socket){
       //  $scope.socket = socket('127.0.0.1:3000');

@@ -46,6 +46,10 @@ define([
         console.log($scope.roomId);
         $scope.roomId = $routeParams.roomId;
         $rootScope.loginUser = $cookieStore.get('userinfo');
+        if(!$rootScope.loginUser){
+          window.location.href="#/view2";
+          return;
+        }
         $scope.msgContent = [];
         console.log("当前登陆用户：");
         console.log($scope.loginUser);
@@ -59,7 +63,7 @@ define([
         //  $scope.upload($scope.files);
         //});
         
-        $scope.upload = function(files,type){
+        $scope.upload = function(files,type,chatType){
           if(files && files.length){
             for(var i = 0;i<files.length;i++){
               var file = files[i];
@@ -73,7 +77,16 @@ define([
                 console.log(evt);
               }).success(function(res){
                 if(res.isSuccess){
-                  $scope.sendMsg(res);
+                  if(chatType == "roomChat"){
+                    $scope.sendMsg(res);
+                  }
+                  if(chatType == "private"){
+                    res.toUser = $scope.selectedChatMethod.value;
+                    $scope.sendPrivate(res);
+                  }
+                  if(chatType == "announcement"){
+                    $scope.sendAll(res);
+                  }
                 }
               });
             }

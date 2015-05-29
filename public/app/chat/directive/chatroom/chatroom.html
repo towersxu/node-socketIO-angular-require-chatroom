@@ -17,13 +17,14 @@
 </div>
 <div class="bottomChatWrapper">
     <select id="chatMethodSelect" ng-model="selectedChatMethod" ng-options="chatMethod.method for chatMethod in chatMethods" class="bottomChat"></select>
-    <input type="text" placeholder="请输入内容" class="bottomChat sendTextBox">
+    <input type="text" value="{{inputContent}}" ng-model="inputContent" placeholder="请输入内容" class="bottomChat sendTextBox">
     <button class="bottomChat sendButton" ng-click="sendChatMsg()">发送</button>
 </div>
 <div class="bottomChatWrapper">
-    <button class="bottomChat sendButton">发送图片</button>
-    <button class="bottomChat sendButton">发送视频</button>
-    <button class="bottomChat sendButton">发送音乐</button>
+    <button class="bottomChat sendButton" ngf-select ngf-change="sendMedia($files,'img')">发送图片</button>
+    <button class="bottomChat sendButton" ngf-select ngf-change="sendMedia($files,'video')">发送视频</button>
+    <button class="bottomChat sendButton" ngf-select ngf-change="sendMedia($files,'music')">发送音乐</button>
+    <button class="bottomChat sendButton" ngf-select ngf-change="sendMedia($files,'flash')">发送Flash</button>
 </div>
 <div class="userList">
     <h3>当前房间用户：</h3>
