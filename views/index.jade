@@ -3,7 +3,6 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
-  input(tyep='text',value='ab',id='msgBox')
-  input(tyep='text',value='ba',id='msgBox1')
+  a(href='/app') 进去聊天项目
   script(src='/javascripts/socket.io.js')
   script(src='/javascripts/socket-run.js')

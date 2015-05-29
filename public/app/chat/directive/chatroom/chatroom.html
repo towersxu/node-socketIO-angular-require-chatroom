@@ -8,7 +8,7 @@
                 <source ng-src="{{msg.video | trusted}}" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
-            <audio controls="controls" ng-class="{true:'hidden', false:''}[msg.isMusicHidden]">
+            <audio width="320" height="30" controls="controls" ng-class="{true:'hidden', false:''}[msg.isMusicHidden]">
                 <source ng-src="{{msg.music | trusted}}" type="audio/mpeg">
                 Your browser does not support the audio tag.
             </audio>
@@ -29,6 +29,7 @@
     <button class="bottomChat sendButton" ngf-select ngf-change="sendMedia($files,'video')">发送视频</button>
     <button class="bottomChat sendButton" ngf-select ngf-change="sendMedia($files,'music')">发送音乐</button>
     <button class="bottomChat sendButton" ngf-select ngf-change="sendMedia($files,'flash')">发送Flash</button>
+    <span ng-model="progress">{{progress}}</span>
 </div>
 <div class="userList">
     <h3>当前房间用户：</h3>
@@ -36,8 +37,3 @@
         <li ng-repeat="roomUser in roomUsers" ng-click="selectUser(roomUser)"><a class="roomUserList" title="发送私聊">{{roomUser.userName}}</a></li>
     </ul>
 </div>
-
-<object width="320" height="240">
-    <param name="userFlash" value="http://192.168.1.39:3000/upload/aaa.swf">
-    <embed src="http://192.168.1.39:3000/upload/aaa.swf" width="320" height="240" name="2" align=""></embed>
-</object>

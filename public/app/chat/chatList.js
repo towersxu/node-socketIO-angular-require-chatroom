@@ -51,8 +51,6 @@ define([
           return;
         }
         $scope.msgContent = [];
-        console.log("当前登陆用户：");
-        console.log($scope.loginUser);
         require(['chat/ctrlChatroom'],function(ctrlChatroom){
           $injector.invoke(ctrlChatroom, this, {'$scope': $scope});
         });
@@ -74,7 +72,9 @@ define([
                 },
                 file:file
               }).progress(function (evt){
-                console.log(evt);
+                if(evt.loaded && evt.total){
+                  $scope.progress = "上传中..."+(evt.loaded/evt.total*100).toFixed(2)+"%";
+                }
               }).success(function(res){
                 if(res.isSuccess){
                   if(chatType == "roomChat"){
@@ -87,6 +87,7 @@ define([
                   if(chatType == "announcement"){
                     $scope.sendAll(res);
                   }
+                  $scope.progress = "";
                 }
               });
             }

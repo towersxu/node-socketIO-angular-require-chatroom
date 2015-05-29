@@ -31,6 +31,8 @@
     "shelljs": "^0.2.6"
   },
   "scripts": {
+    "postinstall": "bower install",
+    "prestart": "npm install",
     "start": "node ./bin/www"
   }
 }

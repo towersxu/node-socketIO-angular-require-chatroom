@@ -64,8 +64,11 @@ define(['chat/socket.io'], function(socket) {
             }
           }
         }
-        if(msg && (msg.music || msg.video)){
+        if(msg &&  msg.video){
           extraHeight = 320;
+        }
+        if(msg &&  msg.music){
+          extraHeight = 30;
         }
         if(chatListHeight+extraHeight >= chatRoomHeight){
           $scope.isShowBottom = true;
