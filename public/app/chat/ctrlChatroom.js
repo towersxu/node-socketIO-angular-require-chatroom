@@ -77,6 +77,7 @@ define(['chat/socket.io'], function(socket) {
       var type = msg.msgType;
       msg.isHidden = true;
       msg.isMusicHidden = true;
+      msg.isFlashHidden = true;
       if(type == "video"){
         msg.video = msg.filePath;
         msg.isHidden = false;
@@ -88,6 +89,11 @@ define(['chat/socket.io'], function(socket) {
       if(type == "img"){
         msg.img = msg.filePath;
       }
+      if(type == "flash"){
+        msg.flash = msg.filePath;
+        msg.isFlashHidden = false;
+      }
+
       return msg;
     }
     //接收用户leave房间信息。
