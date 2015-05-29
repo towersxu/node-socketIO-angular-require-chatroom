@@ -6,13 +6,14 @@ var fs = require('fs');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin","*");
   res.render('index', { title: 'Express' });
 });
 
 router.post('/file-upload',function(req,res,next){
   //console.log(req.files);
   //res.render('index', { title: 'Express' });
-  //res.header("Access-Control-Allow-Origin","*");
+  res.header("Access-Control-Allow-Origin","*");
   var form = new formidable.IncomingForm();
   form.uploadDir = 'public/upload/';
   form.keepExtensions = true;
