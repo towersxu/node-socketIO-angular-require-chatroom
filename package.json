@@ -31,15 +31,6 @@
     "shelljs": "^0.2.6"
   },
   "scripts": {
-    "start": "node ./bin/www",
-    "postinstall": "bower install",
-    "prestart": "npm install",
-    "pretest": "npm install",
-    "test": "node_modules/karma/bin/karma start karma.conf.js",
-    "test-single-run": "karma start karma.conf.js  --single-run",
-    "preupdate-webdriver": "npm install",
-    "update-webdriver": "webdriver-manager update",
-    "preprotractor": "npm run update-webdriver",
-    "protractor": "protractor e2e-tests/protractor.conf.js"
+    "start": "node ./bin/www"
   }
 }

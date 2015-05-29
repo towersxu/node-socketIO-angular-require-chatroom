@@ -68,7 +68,7 @@ define([
             for(var i = 0;i<files.length;i++){
               var file = files[i];
               Upload.upload({
-                url:"http://192.168.1.39:3000/file-upload",
+                url:"http://192.168.1.45:3000/file-upload",
                 fields:{
                   'msgType':type
                 },

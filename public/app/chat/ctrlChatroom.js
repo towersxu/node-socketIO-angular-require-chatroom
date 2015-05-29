@@ -37,6 +37,7 @@ define(['chat/socket.io'], function(socket) {
         msgHeader:msg.msgHeader,
         isHidden:msg.isHidden,
         isMusicHidden:msg.isMusicHidden,
+        isFlashHidden:msg.isFlashHidden,
         content:"加入房间"
       });
       $scope.$apply();
@@ -104,6 +105,7 @@ define(['chat/socket.io'], function(socket) {
         msgHeader:msg.msgHeader,
         isHidden:msg.isHidden,
         isMusicHidden:msg.isMusicHidden,
+        isFlashHidden:msg.isFlashHidden,
         content:"离开房间"
       });
       $scope.$apply();

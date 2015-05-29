@@ -27,7 +27,7 @@ router.post('/file-upload',function(req,res,next){
     //var avatarName = Math.random() + '.' + extName;
     //var newPath = form.uploadDir + avatarName;
 
-    fields.filePath = "http://192.168.1.39:3000"+files.file.path.substring(6);
+    fields.filePath = "http://192.168.1.45:3000"+files.file.path.substring(6);
     fields.isSuccess = true;
     //fs.renameSync(files.file.path, newPath);  //重命名
 
