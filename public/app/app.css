@@ -35,6 +35,8 @@
 
 #chatRoomList{
     width: 300px;
+    height:300px;
+    overflow-y: scroll;
     border: 1px solid #408080;
     position: fixed;
     top:50px;
@@ -61,6 +63,7 @@
 }
 .chatroomWrap{
     width: 600px;
+    margin:0 auto;
 }
 .button{
     -webket-appearance:button;
@@ -68,4 +71,77 @@
     margin: 10px;
     width: 100px;
     border: 1px solid #aeaeae;
+}
+
+#chatRoom{
+    height:600px;
+    overflow: hidden;
+    position:relative;
+    border:1px solid #e1e1e1;
+    margin:0 auto;
+}
+#chatRoom ul{
+    position: absolute;
+    list-style: none;
+    padding-left: 10px;
+}
+#chatRoom li{
+    line-height: 24px;
+    margin: 5px;
+}
+#chatRoom .scrollBottom{
+    bottom:0;
+}
+.roomHeader{
+    color: #5cb85c
+}
+.roomUser{
+    cursor: pointer;
+    color: #B94A48;
+}
+.roomUser:hover{
+    color: #B22A28;
+}
+.bottomChatWrapper {
+    margin-top: 10px;
+}
+
+.bottomChat{
+    height: 60px;
+    display: inline-block;
+    line-height: 24px;
+    font-size: 18px;
+}
+.sendTextBox{
+    width: 413px;
+    text-indent: 20px;
+}
+.sendButton{
+    width: 80px;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    border-width: 1px;
+
+}
+.roomUserList{
+    font-size: 18px;
+    color: #B94A48;
+    line-height: 24px;
+    cursor: pointer;
+
+}
+.userList{
+    border: 2px solid #999;
+    padding: 20px;
+    width: 300px;
+    position: absolute;
+    top: 100px;
+    left: 150px;
+}
+.userList ul{
+    list-style: none;
+}
+.roomUserList:hover{
+    color: #5cb85c;
 }

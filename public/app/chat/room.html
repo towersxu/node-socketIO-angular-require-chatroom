@@ -9,20 +9,26 @@ sendto:
 <button ngf-select ngf-change="sendMedia($files,'img')">发送图片</button>
 <button ngf-select ngf-change="sendMedia($files,'music')">发送音乐</button>
 <button ngf-select ngf-change="sendMedia($files,'video')">发送视频</button>
-<table class="table">
-    <thead><th>姓名</th><th>ID</th></thead>
-    <tr ng-repeat="roomUser in roomUsers">
-        <td>{{roomUser.userName}}</td>
-        <td>{{roomUser.userId}}</td>
-    </tr>
-</table>
+<!--<table class="table">-->
+    <!--<thead><th>姓名</th><th>ID</th></thead>-->
+    <!--<tr ng-repeat="roomUser in roomUsers">-->
+        <!--<td>{{roomUser.userName}}</td>-->
+        <!--<td>{{roomUser.userId}}</td>-->
+    <!--</tr>-->
+<!--</table>-->
+<!--<div class="userList">-->
+    <!--<h3>当前房间用户：</h3>-->
+    <!--<ul>-->
+        <!--<li ng-repeat="roomUser in roomUsers" ng-click="selectUser(roomUser)"><a class="roomUserList" title="发送私聊">{{roomUser.userName}}</a></li>-->
+    <!--</ul>-->
+<!--</div>-->
 <div ng-controller="chatListCtrl">
     <chatroom-list></chatroom-list>
 </div>
 <div ng-controller="chatroomCtrl" class="chatroomWrap">
     <chatroom></chatroom>
 </div>
-<button ng-click="logoutRoom()">退出房间</button>
+<!--<button ng-click="logoutRoom()">退出房间</button>-->
 <!--<audio controls="controls">-->
     <!--<source src="http://127.0.0.1:3000/music/James Blunt - Same Mistake.mp3" type="audio/mpeg">-->
     <!--Your browser does not support the audio tag.-->

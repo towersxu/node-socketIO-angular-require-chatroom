@@ -1,9 +1,8 @@
 <div id="chatRoom">
-
-    <ul>
+    <ul id="chatlist" ng-class="{true:'scrollBottom', false:''}[isShowBottom]">
         <li ng-repeat="msg in msgContent">
-            <span>[{{msg.msgHeader}}]</span>
-            <span>{{msg.userName}}</span>:{{msg.content}}
+            <span class="roomHeader">[{{msg.msgHeader}}]</span>
+            <span class="roomUser">{{msg.userName}}</span>:{{msg.content}}
             <img style="max-width:320px" ng-src="{{msg.img}}">
             <video width="320" height="240" controls="controls" ng-class="{true:'hidden', false:''}[msg.isHidden]">
                 <source ng-src="{{msg.video | trusted}}" type="video/mp4">
@@ -14,5 +13,21 @@
                 Your browser does not support the audio tag.
             </audio>
         </li>
+    </ul>
+</div>
+<div class="bottomChatWrapper">
+    <select id="chatMethodSelect" ng-model="selectedChatMethod" ng-options="chatMethod.method for chatMethod in chatMethods" class="bottomChat"></select>
+    <input type="text" placeholder="请输入内容" class="bottomChat sendTextBox">
+    <button class="bottomChat sendButton" ng-click="sendChatMsg()">发送</button>
+</div>
+<div class="bottomChatWrapper">
+    <button class="bottomChat sendButton">发送图片</button>
+    <button class="bottomChat sendButton">发送视频</button>
+    <button class="bottomChat sendButton">发送音乐</button>
+</div>
+<div class="userList">
+    <h3>当前房间用户：</h3>
+    <ul>
+        <li ng-repeat="roomUser in roomUsers" ng-click="selectUser(roomUser)"><a class="roomUserList" title="发送私聊">{{roomUser.userName}}</a></li>
     </ul>
 </div>
