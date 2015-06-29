@@ -3,18 +3,23 @@
  */
 
 var sticky = require('sticky-session');
-sticky(function() {
+var process_num =10;
+var process_server = sticky(process_num, function () {
 
   var http = require('http'),
-    sio = require('socket.io');
-  var server = http.createServer(function(req,res) {
-    res.end('worker:'+process.env,NODE_WORKER_ID);
-  });
-  sio(server).of("/1").on("connection",function(socket){
-    socket.emit('user number',{userNum:this.sockets.length});
-    console.log("加入房间，此房间人数为:"+this.sockets.length);
-  });
+    sio = require('socket.io'),
+    msq = require('./dbConnection/mysqlConn').msq,
+    chatroomServer = require('./chatroomServer/chatroomServer');
+  var server = http.createServer(function (req, res) {
+      //console.log(req);
+      res.writeHead(200);
+      res.end("success");
+    //res.end('worker:' + process.env, NODE_WORKER_ID);
+  }),
+  roomArr = msq.unConnect();
+  chatroomServer.initChatRoom(roomArr,server,sio);
   return server;
-}).listen(3001,function(){
+});
+process_server.listen(3000, function () {
   console.log('server started on 3000 port');
 });
