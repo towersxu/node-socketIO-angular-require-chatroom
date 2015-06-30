@@ -20,14 +20,17 @@ connection.setting  =  function(setting){
     connection.CONN.user = setting.user || connection.CONN.user;
     connection.CONN.password = setting.password || connection.CONN.password;
     connection.CONN.database = setting.database || connection.CONN.database;
+    return connection.CONN;
+  }else{
+    return {status:"error",info:"args should be an object"}
   }
 };
 connection.query = function (sql) {
-  var connection = mysql.createConnection(connection.CONN);
-  connection.connect();
-  connection.query(sql,function(err,rows,fields) {
+  var connect = mysql.createConnection(connection.CONN);
+  connect.connect();
+  connect.query(sql,function(err,rows,fields) {
     if (err) {
-      return [{"error":"query error"}]
+      return err;
     }
     return rows;
   });
