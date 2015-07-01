@@ -50,6 +50,13 @@ connection.unConnect = function (){
     {"name":"雄霸天下6","id":"57","onlineUser":"100"},
     {"name":"雄霸天下7","id":"67","onlineUser":"100"},
     {"name":"风云","id":"8","onlineUser":"100"}];
+  //for(var i=100;i<600;i++){
+  //  var obj = {};
+  //  obj.name = "lingshi"+i;
+  //  obj.id = i+"";
+  //  obj.onlineUser = 0;
+  //  roomArr.push(obj)
+  //}
   return roomArr;
 };
 

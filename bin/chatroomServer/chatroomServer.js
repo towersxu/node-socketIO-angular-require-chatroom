@@ -13,12 +13,19 @@ exports.initChatRoom = function (roomArr, server ,sio) {
   //  console.log(socket);
   //  return next();
   //});
-  for (var i = 0; i < roomArr.length; i++) {
-    var roomNamespace = io.of("/"+roomArr[i].id);
-    roomConnected(roomNamespace);
-    //roomNamespaceArr.push(roomNamespace);
-  }
+  //for (var i = 0; i < roomArr.length; i++) {
+  //  var roomNamespace = io.of("/"+roomArr[i].id);
+  //  roomConnected(roomNamespace);
+  //  //roomNamespaceArr.push(roomNamespace);
+  //}
   io.on('connection',function(socket){
+    socket.on("join room",function(msg){
+      socket.join(msg.roomId);
+      console.log(io);
+    });
+    socket.on("room chat",function(msg){
+
+    });
     socket.on("create room",function(msg){
       console.log("***************");
       console.log(msg);

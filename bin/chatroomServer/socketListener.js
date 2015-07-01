@@ -3,6 +3,8 @@
  */
 module.exports = function roomConnected(roomNamespace){
   roomNamespace.on("connection",function(socket){
+    console.log("this is a namespace connection");
+    console.log(socket.id);
     socket.on("room chat", function (msg) {
       roomNamespace.emit('room chat',msg);
     });
