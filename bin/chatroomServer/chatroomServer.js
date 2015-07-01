@@ -18,14 +18,35 @@ exports.initChatRoom = function (roomArr, server ,sio) {
   //  roomConnected(roomNamespace);
   //  //roomNamespaceArr.push(roomNamespace);
   //}
+  var roomUserNum = {};
   io.on('connection',function(socket){
     socket.on("join room",function(msg){
       socket.join(msg.roomId);
-      console.log(io);
+      //console.log(socket);
+      //console.log(io);
+      //console.log(socket.adapter.rooms);
+      //var rooms = io.sockets.adapter.rooms;
+      //for(var i in rooms){
+      //  console.log(i.length);
+      //}
+      //io.to(msg.roomId).emit("user number",{userNum:Object.keys(socket.adapter.rooms[msg.roomId]).length,pid:process.pid});
     });
     socket.on("room chat",function(msg){
-
+      io.to(msg.roomId).emit("room chat",msg);
     });
+
+    //var roomUserNum = {};
+    setInterval(function(){
+      var rooms = io.sockets.adapter.rooms;
+      //console.log(rooms);
+      for(var i in rooms){
+        if(i.length !== 20 ){
+          var num = Object.keys(rooms[i]).length;
+          io.to(i).emit("user number",{userNum:num,pid:process.pid});
+        }
+      }
+    },30000);
+
     socket.on("create room",function(msg){
       console.log("***************");
       console.log(msg);
