@@ -9,6 +9,7 @@ exports.initChatRoom = function (roomArr, server ,sio) {
   io.adapter(redis({host:'localhost',port:6379}));
   process.on("message",function(m,msg){
     if(m && m.handler == "user number"){
+      delete m.handler;
       userObject = m;
     }
   });
@@ -16,6 +17,9 @@ exports.initChatRoom = function (roomArr, server ,sio) {
   //  console.log(msg);
   //});
   io.on('connection',function(socket){
+    socket.on("onlineUser Num",function(){
+      socket.emit("onlineUser Num",userObject);
+    });
     socket.on("join room",function(msg){
       socket.join(msg.roomId);
     });
@@ -24,6 +28,14 @@ exports.initChatRoom = function (roomArr, server ,sio) {
         io.to(msg.roomId).emit("room chat",msg);
       }catch(e){
         socket.emit("error meaasge",{"error":"roomId is required"});
+      }
+    });
+    socket.on("user number",function(msg){
+      if(msg.roomId){
+        if(!userObject[msg.roomId]){
+          userObject[msg.roomId] = 1;
+        }
+        socket.emit("user number",userObject[msg.roomId]);
       }
     });
     setInterval(function(){
@@ -37,14 +49,6 @@ exports.initChatRoom = function (roomArr, server ,sio) {
       }
       process.send({handler:"user number","roomUsers":roomUsers,pid:process.pid});
     },30000);
-    setInterval(function(){
-      var i;
-      for(i in userObject){
-        if(i !== "handler" && Object.prototype.hasOwnProperty.call(userObject,i)){
-          io.to(i).emit("user number",{userNum:userObject[i]});
-        }
-      }
-    });
   });
 };
 

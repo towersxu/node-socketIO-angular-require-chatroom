@@ -44,8 +44,6 @@ module.exports = function sticky(num, callback) {
           if("user number" === msg.handler){
             sumUserNum(msg);
           }
-          //console.log(msg);
-          //sendToWork();
         })
       }(i);
     }
@@ -54,22 +52,20 @@ module.exports = function sticky(num, callback) {
       sumUserObject[msg.pid] = msg.roomUsers;
     }
     setInterval(function(){
-      console.log(sumUserObject);
       var i, j,userObject = {};
       userObject.handler = "user number";
       for(i in sumUserObject){
         if(Object.prototype.hasOwnProperty.call(sumUserObject,i)){
           for(j in sumUserObject[i]){
-            if(!userObject[j]){
-              userObject[j] = 0;
+            if(Object.prototype.hasOwnProperty.call(sumUserObject[i],j)){
+              if(!userObject[j]){
+                userObject[j] = 0;
+              }
+              userObject[j] = userObject[j]+sumUserObject[i][j];
             }
-            userObject[j] = userObject[j]+sumUserObject[i][j];
           }
         }
       }
-      console.log("------------->");
-      console.log(userObject);
-
       sendToWork(userObject);
     },30000);
     function sendToWork(msg){
@@ -93,8 +89,6 @@ module.exports = function sticky(num, callback) {
     // Worker process
     process.on('message', function(msg, socket) {
       if (msg !== 'sticky-session:connection') {
-        console.log("===>");
-        console.log(msg);
         return;
       }
       server.emit('connection', socket);
