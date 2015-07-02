@@ -40,6 +40,7 @@ module.exports = function sticky(num, callback) {
           console.error('sticky-session: worker died:'+worker.process.pid);
           spawn(i);
         });
+        //监听子进程的用户数.
         workers[i].on('message',function(msg){
           if("user number" === msg.handler){
             sumUserNum(msg);
@@ -47,10 +48,12 @@ module.exports = function sticky(num, callback) {
         })
       }(i);
     }
+
     var sumUserObject = {};
     function sumUserNum(msg){
       sumUserObject[msg.pid] = msg.roomUsers;
     }
+    //计算所有的用户数,定时向子进程发送总的用户数.这2个对象遍历我不想承认是为写的.
     setInterval(function(){
       var i, j,userObject = {};
       userObject.handler = "user number";

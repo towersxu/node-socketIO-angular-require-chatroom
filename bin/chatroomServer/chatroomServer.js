@@ -13,9 +13,6 @@ exports.initChatRoom = function (roomArr, server ,sio) {
       userObject = m;
     }
   });
-  //io.on("lala",function(msg){
-  //  console.log(msg);
-  //});
   io.on('connection',function(socket){
     socket.on("onlineUser Num",function(){
       socket.emit("onlineUser Num",userObject);
