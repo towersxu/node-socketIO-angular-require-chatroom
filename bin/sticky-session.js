@@ -5,7 +5,7 @@ function hash(ip, seed) {
   var hash = ip.reduce(function(r, num) {
     r += parseInt(num, 10);
     r %= 2147483648;
-    r += (r << 10)
+    r += (r << 10);
     r %= 2147483648;
     r ^= r >> 6;
     return r;
@@ -40,21 +40,43 @@ module.exports = function sticky(num, callback) {
           console.error('sticky-session: worker died:'+worker.process.pid);
           spawn(i);
         });
-        //workers[i].on('message',function(msg){
-        //  console.log('msg==============>');
-        //  console.log(process.pid);
-        //  console.log(msg);
-        //  console.log(this.id);
-        //  sendToWork();
-        //})
+        workers[i].on('message',function(msg){
+          if("user number" === msg.handler){
+            sumUserNum(msg);
+          }
+          //console.log(msg);
+          //sendToWork();
+        })
       }(i);
     }
-    //function sendToWork(m,msg){
-    //  for(var i=0;i<num;i++){
-    //    console.log("send to worker"+workers[i].id);
-    //    workers[i].send({"bbb":"dssd"})
-    //  }
-    //}
+    var sumUserObject = {};
+    function sumUserNum(msg){
+      sumUserObject[msg.pid] = msg.roomUsers;
+    }
+    setInterval(function(){
+      console.log(sumUserObject);
+      var i, j,userObject = {};
+      userObject.handler = "user number";
+      for(i in sumUserObject){
+        if(Object.prototype.hasOwnProperty.call(sumUserObject,i)){
+          for(j in sumUserObject[i]){
+            if(!userObject[j]){
+              userObject[j] = 0;
+            }
+            userObject[j] = userObject[j]+sumUserObject[i][j];
+          }
+        }
+      }
+      console.log("------------->");
+      console.log(userObject);
+
+      sendToWork(userObject);
+    },30000);
+    function sendToWork(msg){
+      for(var i=0;i<num;i++){
+        workers[i].send(msg)
+      }
+    }
     var seed = ~~(Math.random() * 1e9);
     server = net.createServer(function(c) {
       // Get int31 hash of ip
