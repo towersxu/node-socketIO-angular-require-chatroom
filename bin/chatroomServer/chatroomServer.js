@@ -6,17 +6,17 @@ exports.initChatRoom = function (roomArr, server ,sio) {
   var redis = require('socket.io-redis');
   var io = sio(server);
   io.adapter(redis({host:'localhost',port:6379}));
-  process.on("message",function(m,msg){
-    console.log("news");
-    console.log(process.pid);
-    console.log(m);
-    if(m !== "sticky-session:connection"){
-      console.log(msg);
-    }
-  });
-  io.on("lala",function(msg){
-    console.log(msg);
-  });
+  //process.on("message",function(m,msg){
+  //  console.log("news");
+  //  console.log(process.pid);
+  //  console.log(m);
+  //  if(m !== "sticky-session:connection"){
+  //    console.log(msg);
+  //  }
+  //});
+  //io.on("lala",function(msg){
+  //  console.log(msg);
+  //});
   io.on('connection',function(socket){
     socket.on("join room",function(msg){
       socket.join(msg.roomId);
