@@ -9,8 +9,10 @@
     "should":"3.3.2",
     "mocha":"2.2.5",
     "istanbul":"0.3.14",
+    "winston":"1.0.1",
     "mysql":"2.7.0"
   },
+  "main":"./bin/worker.js",
   "scripts": {
     "prestart": "npm install",
     "start": "node ./bin/worker.js",
