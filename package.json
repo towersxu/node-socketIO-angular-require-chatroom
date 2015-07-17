@@ -15,7 +15,7 @@
   "main":"./bin/worker.js",
   "scripts": {
     "prestart": "npm install",
-    "start": "node ./bin/worker.js",
+    "start": "nohup node ./bin/worker.js > start.log &",
     "pretest":"istanbul cover node_modules/mocha/bin/_mocha",
     "test": "./node_modules/.bin/mocha --recursive -R xunit test/ >test-reports.xml && istanbul report cobertura && istanbul report clover"
   }
