@@ -17,7 +17,7 @@ var process_server = sticky(process_num, function () {
   chatroomServer.initChatRoom(server, sio);
   return server;
 });
-process_server.listen(3000, function () {
-  console.log('server started on 3000 port');
+process_server.listen(8888, function () {
+  console.log('server started on 8888 port');
 });
 
