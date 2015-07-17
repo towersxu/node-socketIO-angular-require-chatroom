@@ -58,7 +58,7 @@ module.exports = function sticky(num, callback) {
         workers[i] = cluster.fork();
         // Restart worker on exit
         workers[i].on('exit', function (worker, code, signal) {
-          logger.log('error', 'sticky-session: worker died:%d', worker.process.pid);
+          logger.log('error', 'sticky-session: worker died:%d', process.pid);
           spawn(i);
         });
         //监听子进程的用户数.
