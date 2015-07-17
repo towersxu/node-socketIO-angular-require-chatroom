@@ -7,7 +7,7 @@ var logger = new (winston.Logger)({
   transports: [
     new (winston.transports.File)({
       name: "info-file",
-      filename: "filelog-info-7-9.2.log",
+      filename: "filelog-info.log",
       level: 'info'
     })
   ]
@@ -25,7 +25,7 @@ exports.initChatRoom = function (server, sio) {
   setInterval(function () {
     var mem = process.memoryUsage();
     logger.log('info', 'pid %d |heapTotal %s |heapUsed %s |rss %s', process.pid, formatBytes(mem.heapTotal), formatBytes(mem.heapUsed), formatBytes(mem.rss));
-  }, 60000);
+  }, 600000);
   //子进程接收父进程进行通信。
   process.on("message", function (m, msg) {
     if (m && m.handler == "user number") {

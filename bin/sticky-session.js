@@ -7,6 +7,11 @@ var logger = new (winston.Logger)({
       name: "error-file",
       filename: "filelog-error.log",
       level: 'error'
+    }),
+    new (winston.transports.File)({
+      name: "warning-file",
+      filename: "file-warning.log",
+      level: 'warn'
     })
   ]
 });
@@ -40,6 +45,13 @@ module.exports = function sticky(num, callback) {
 
   // Master will spawn `num` workers
   if (cluster.isMaster) {
+
+    var coreNum = require('os').cpus().length;
+    logger.log('warn', 'cpu core num(%d)',coreNum);
+    if(coreNum !== num){
+      logger.log('warn', 'cpu core num(%d) not equal process num(%d)',coreNum,num);
+    }
+
     var workers = [];
     for (var i = 0; i < num; i++) {
       !function spawn(i) {

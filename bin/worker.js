@@ -3,7 +3,7 @@
  */
 
 var sticky = require('./sticky-session');
-var process_num = 10;
+var process_num = 15;
 var process_server = sticky(process_num, function () {
 
   var http = require('http'),
