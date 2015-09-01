@@ -1,16 +1,26 @@
 var net = require('net'),
   cluster = require('cluster');
+var fs = require('fs');
 var winston = require('winston');
+var confPath,confErrorPath;
+try{
+  var conf = fs.readFileSync('./package.json');
+  conf = JSON.parse(conf);
+  confPath = conf['warnLog'] || './chatroom-warn.log';
+  confErrorPath = conf['warnError'] || './chatroom-error.log';
+}catch (e){
+  console.log(e);
+}
 var logger = new (winston.Logger)({
   transports: [
     new (winston.transports.File)({
       name: "error-file",
-      filename: "filelog-error.log",
+      filename: confErrorPath,
       level: 'error'
     }),
     new (winston.transports.File)({
       name: "warning-file",
-      filename: "file-warning.log",
+      filename: confPath,
       level: 'warn'
     })
   ]

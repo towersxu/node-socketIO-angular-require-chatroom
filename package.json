@@ -13,9 +13,11 @@
     "mysql":"2.7.0"
   },
   "main":"./bin/worker.js",
+  "warnLog":"/home/chatroom-warn.log",
+  "errorLog":"/home/chatroom-error.log",
   "scripts": {
     "prestart": "npm install",
-    "start": "nohup node ./bin/worker.js > start.log &",
+    "start": "nohup node ./bin/worker.js > /home/start.log &",
     "pretest":"istanbul cover node_modules/mocha/bin/_mocha",
     "test": "./node_modules/.bin/mocha --recursive -R xunit test/ >test-reports.xml && istanbul report cobertura && istanbul report clover"
   }
