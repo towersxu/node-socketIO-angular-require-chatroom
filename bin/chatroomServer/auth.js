@@ -3,12 +3,13 @@
  */
 var http =require('http');
 var Q = require('q');
-function post(data){
+
+function post(data,path){
   var opt = {
     method: "POST",
-    host: "localhost",
-    port: 3000,
-    path: "/v/j/im/v",
+    host: "192.168.1.36",
+    port: 8080,
+    path: path || "/v/j/im/v",
     headers: {
       "Content-Type": 'application/json'
     }
@@ -21,7 +22,7 @@ function post(data){
         deferred.resolve(data.toString());
       });
     } else {
-      deferred.reject(e.toString());
+      deferred.reject(res.statusCode);
     }
   });
   req.on('error',function(e){
