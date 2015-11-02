@@ -7,7 +7,7 @@ var fs = require('fs');
 var winston = require('winston');
 var auth = require('./auth');
 var access = require('./access');
-var confPath, confErrorPath, confRedisPath,confKey;
+var confPath, confErrorPath, confRedisPath,confKey,isSticky;
 var redis = require("redis"),
   client = redis.createClient();
 var conf;
@@ -18,6 +18,7 @@ try {
   confKey = conf['key'];
   confErrorPath = conf['warnError'] || './chatroom-error.log';
   confRedisPath = conf['redisError'] || './redis-error.log';
+  isSticky = conf['isSticky'];
 } catch (e) {
   console.log(e);
 }
@@ -48,7 +49,7 @@ var formatBytes = function (bytes) {
   return (bytes / 1024 / 1024).toFixed(2) + 'MB';
 };
 exports.initChatRoom = function (server, sio) {
-  var redis = require('socket.io-redis');
+  var ioredis = require('socket.io-redis');
   var io = sio(server);
   //if(conf && conf.origins && conf.origins.length>0){
   //  var origin='';
@@ -60,7 +61,9 @@ exports.initChatRoom = function (server, sio) {
   //}
   var userObject = {};
   //redis对socket.io进行进程通信。
-  io.adapter(redis({host: 'localhost', port: 6379}));
+  if(isSticky){
+    io.adapter(ioredis({host: 'localhost', port: 6379}));
+  }
   //每隔10分钟记录内存情况
   setInterval(function () {
     var mem = process.memoryUsage();
@@ -76,24 +79,24 @@ exports.initChatRoom = function (server, sio) {
     }
   }, 600000);
   //子进程接收父进程进行通信。
-  process.on("message", function (m, msg) {
-    if (m && m.handler == "user number") {
-      delete m.handler;
-      userObject = m;
-    }
-  });
+  //process.on("message", function (m, msg) {
+  //  if (m && m.handler == "user number") {
+  //    delete m.handler;
+  //    userObject = m;
+  //  }
+  //});
   //定时向父进程发送当前进程各房间用户数。
-  setInterval(function () {
-    var rooms = io.sockets.adapter.rooms,
-      roomUsers = {},
-      i;
-    for (i in rooms) {
-      if (i.length !== 20 && Object.prototype.hasOwnProperty.call(rooms, i)) {  //i==20表示这是socket.id
-        roomUsers[i] = Object.keys(rooms[i]).length;
-      }
-    }
-    process.send({handler: "user number", "roomUsers": roomUsers, pid: process.pid});
-  }, 30000);
+  //setInterval(function () {
+  //  var rooms = io.sockets.adapter.rooms,
+  //    roomUsers = {},
+  //    i;
+  //  for (i in rooms) {
+  //    if (i.length !== 20 && Object.prototype.hasOwnProperty.call(rooms, i)) {  //i==20表示这是socket.id
+  //      roomUsers[i] = Object.keys(rooms[i]).length;
+  //    }
+  //  }
+  //  process.send({handler: "user number", "roomUsers": roomUsers, pid: process.pid});
+  //}, 30000);
 
   io.on('connection', function (socket) {
     socket.auth = false;
@@ -162,6 +165,8 @@ exports.initChatRoom = function (server, sio) {
           }
         } else {
           socket.auth = false;
+          logger.log('error', 'authorization failed! %s invalid params', msg);
+          //socket.disconnect();
         }
         socket.emit('authorization', {isLogin: socket.login, isAuth: socket.auth})
       }, function (data) {

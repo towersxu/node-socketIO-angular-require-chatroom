@@ -3,8 +3,8 @@
  */
 
 var sticky = require('./sticky-session');
-var process_num = 1;
-var process_port = 8888;
+var process_num = require('os').cpus().length-1;
+var process_port = 80;
 var process_server = sticky(process_num, function () {
 
   var http = require('http'),

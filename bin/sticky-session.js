@@ -56,11 +56,11 @@ module.exports = function sticky(num, callback) {
   // Master will spawn `num` workers
   if (cluster.isMaster) {
 
-    var coreNum = require('os').cpus().length;
-    logger.log('warn', 'cpu core num(%d)',coreNum);
-    if(coreNum !== num){
-      logger.log('warn', 'cpu core num(%d) not equal process num(%d)',coreNum,num);
-    }
+    //var coreNum = require('os').cpus().length;
+    //logger.log('warn', 'cpu core num(%d)',coreNum);
+    //if(coreNum !== num){
+    //  logger.log('warn', 'cpu core num(%d) not equal process num(%d)',coreNum,num);
+    //}
 
     var workers = [];
     for (var i = 0; i < num; i++) {
@@ -72,11 +72,11 @@ module.exports = function sticky(num, callback) {
           spawn(i);
         });
         //监听子进程的用户数.
-        workers[i].on('message', function (msg) {
-          if ("user number" === msg.handler) {
-            sumUserNum(msg);
-          }
-        })
+        //workers[i].on('message', function (msg) {
+        //  if ("user number" === msg.handler) {
+        //    sumUserNum(msg);
+        //  }
+        //})
       }(i);
     }
 
@@ -87,28 +87,28 @@ module.exports = function sticky(num, callback) {
     }
 
     //计算所有的用户数,定时向子进程发送总的用户数.这2个对象遍历我不想承认是为写的.
-    setInterval(function () {
-      var i, j, userObject = {};
-      userObject.handler = "user number";
-      for (i in sumUserObject) {
-        if (Object.prototype.hasOwnProperty.call(sumUserObject, i)) {
-          for (j in sumUserObject[i]) {
-            if (Object.prototype.hasOwnProperty.call(sumUserObject[i], j)) {
-              if (!userObject[j]) {
-                userObject[j] = 0;
-              }
-              userObject[j] = userObject[j] + sumUserObject[i][j];
-            }
-          }
-        }
-      }
-      sendToWork(userObject);
-    }, 30000);
-    function sendToWork(msg) {
-      for (var i = 0; i < num; i++) {
-        workers[i].send(msg)
-      }
-    }
+    //setInterval(function () {
+    //  var i, j, userObject = {};
+    //  userObject.handler = "user number";
+    //  for (i in sumUserObject) {
+    //    if (Object.prototype.hasOwnProperty.call(sumUserObject, i)) {
+    //      for (j in sumUserObject[i]) {
+    //        if (Object.prototype.hasOwnProperty.call(sumUserObject[i], j)) {
+    //          if (!userObject[j]) {
+    //            userObject[j] = 0;
+    //          }
+    //          userObject[j] = userObject[j] + sumUserObject[i][j];
+    //        }
+    //      }
+    //    }
+    //  }
+    //  sendToWork(userObject);
+    //}, 30000);
+    //function sendToWork(msg) {
+    //  for (var i = 0; i < num; i++) {
+    //    workers[i].send(msg)
+    //  }
+    //}
 
     var seed = ~~(Math.random() * 1e9);
     server = net.createServer(function (c) {
