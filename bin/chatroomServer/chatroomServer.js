@@ -7,7 +7,7 @@ var fs = require('fs');
 var winston = require('winston');
 var auth = require('./auth');
 var access = require('./access');
-var confPath, confErrorPath, confRedisPath;
+var confPath, confErrorPath, confRedisPath,confKey;
 var redis = require("redis"),
   client = redis.createClient();
 var conf;
@@ -15,6 +15,7 @@ try {
   conf = fs.readFileSync('./package.json');
   conf = JSON.parse(conf);
   confPath = conf['warnLog'] || './chatroom-warn.log';
+  confKey = conf['key'];
   confErrorPath = conf['warnError'] || './chatroom-error.log';
   confRedisPath = conf['redisError'] || './redis-error.log';
 } catch (e) {
@@ -121,6 +122,25 @@ exports.initChatRoom = function (server, sio) {
           });
         }
       });
+    });
+    //后端链接认证
+    socket.on('server connect',function (msg){
+      msg = str2json(msg);
+      if(msg.key &&msg.key === confKey){
+        socket.isAuthedServer = true;
+        socket.emit('server connect',{status:true});
+      }else{
+        socket.disconnect();
+      }
+    });
+    //后端发送消息
+    socket.on("server msg",function(msg){
+      msg = str2json(msg);
+      if(validParam(socket,msg,'roomId') && socket.isAuthedServer){
+        io.to(msg.roomId).emit("sys os", msg);
+      }else{
+        socket.disconnect();
+      }
     });
     /*认证，用户链接时需要将t或者g传递给webserver端认证*/
     socket.on('authorization', function (msg) {

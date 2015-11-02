@@ -8,6 +8,7 @@ function post(data,path){
   var opt = {
     method: "POST",
     host: "chewchew.tv",
+    //host: "192.168.1.21",
     port: 80,
     path: path || "/v/j/im/v",
     headers: {
