@@ -169,10 +169,12 @@ exports.initChatRoom = function (server, sio) {
           logger.log('error', 'authorization failed! %s invalid params', msg);
           //socket.disconnect();
         }
-        socket.emit('authorization', {isLogin: socket.login, isAuth: socket.auth})
+        socket.emit('authorization', {isLogin: socket.login, isAuth: socket.auth});
       }, function (data) {
         logger.log('error', 'connect webserver error %s ', data);
-        socket.disconnect();
+        socket.emit('authorization', {isLogin: socket.login, isAuth: socket.auth});
+        //socket.emit('authorization', {isLogin: socket.login, isAuth: socket.auth})
+        //socket.disconnect();
       });
     });
     /*加入房间，需要将从webserver端获取的用户信息返回给前端*/
@@ -254,7 +256,7 @@ exports.initChatRoom = function (server, sio) {
     socket.on("room chat", function (msg) {
       //console.log(msg);
       msg = str2json(msg);
-      if (!msg || !socket.login || !msg.roomId) {
+      if (!unAuth && (!msg || !socket.login || !msg.roomId)) {
         socket.emit("error meaasge", {"error": "unauthorized"});
         socket.disconnect();
       }
@@ -279,7 +281,7 @@ exports.initChatRoom = function (server, sio) {
     /*赠送礼物*/
     socket.on("send gift",function(msg){
       msg = str2json(msg);
-      if (!msg || !socket.login || !msg.roomId) {
+      if (!unAuth && (!msg || !socket.login || !msg.roomId)) {
         socket.emit("error meaasge", {"error": "unauthorized"});
         socket.disconnect();
       }
