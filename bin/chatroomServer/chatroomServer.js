@@ -7,7 +7,7 @@ var fs = require('fs');
 var winston = require('winston');
 var auth = require('./auth');
 var access = require('./access');
-var confPath, confErrorPath, confRedisPath,confKey,isSticky;
+var confPath, confErrorPath, confRedisPath,confKey,isSticky,unAuth = false;
 var redis = require("redis"),
   client = redis.createClient();
 var conf;
@@ -19,6 +19,7 @@ try {
   confErrorPath = conf['warnError'] || './chatroom-error.log';
   confRedisPath = conf['redisError'] || './redis-error.log';
   isSticky = conf['isSticky'];
+  unAuth = conf['unAuth'];
 } catch (e) {
   console.log(e);
 }
@@ -178,7 +179,7 @@ exports.initChatRoom = function (server, sio) {
     socket.on("join room", function (msg) {
       msg = str2json(msg);
       if(validParam(socket,msg,'roomId')){
-        if (!socket.auth) {
+        if (!socket.auth && !unAuth) {
           socket.disconnect();
         } else if (socket.login) {
           //将该用户信息存入房间管理员人员列表

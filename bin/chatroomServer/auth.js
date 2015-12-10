@@ -7,8 +7,8 @@ var Q = require('q');
 function post(data,path){
   var opt = {
     method: "POST",
-    host: "chewchew.tv",
-    //host: "192.168.1.21",
+    //host: "chewchew.tv",
+    host: "test.cxria.com",
     port: 80,
     path: path || "/v/j/im/v",
     headers: {

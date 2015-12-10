@@ -17,6 +17,7 @@
   "errorLog":"chatroom-error.log",
   "key":"f840d80441836ae522f5f8a4390aa0bdade8bd27ecf4ca31965a58d9a6782abe",
   "isSticky":true,
+  "unAuth":true,
   "origins":[],
   "scripts": {
     "prestart": "npm install",
