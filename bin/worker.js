@@ -6,7 +6,6 @@ var sticky = require('./sticky-session');
 var process_num =2;// require('os').cpus().length-1;
 var process_port = 8888;
 var process_server = sticky(process_num, function () {
-
   var http = require('http'),
     sio = require('socket.io'),
     chatroomServer = require('./chatroomServer/chatroomServer');
@@ -18,7 +17,7 @@ var process_server = sticky(process_num, function () {
   chatroomServer.initChatRoom(server, sio);
   return server;
 });
+
 process_server.listen(process_port, function () {
   console.log('server started on '+process_port+' port');
 });
-

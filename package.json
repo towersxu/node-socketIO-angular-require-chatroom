@@ -4,25 +4,26 @@
   "repository": "",
   "private": true,
   "dependencies": {
-    "socket.io":"1.3.5",
-    "socket.io-redis":"0.1.4",
-    "should":"3.3.2",
-    "mocha":"2.2.5",
-    "istanbul":"0.3.14",
-    "winston":"1.0.1",
-    "mysql":"2.7.0"
+    "istanbul": "0.3.14",
+    "mocha": "2.2.5",
+    "mysql": "2.7.0",
+    "q": "^1.5.0",
+    "should": "3.3.2",
+    "socket.io": "1.3.5",
+    "socket.io-redis": "0.1.4",
+    "winston": "1.0.1"
   },
-  "main":"./bin/worker.js",
-  "warnLog":"chatroom-warn.log",
-  "errorLog":"chatroom-error.log",
-  "key":"f840d80441836ae522f5f8a4390aa0bdade8bd27ecf4ca31965a58d9a6782abe",
-  "isSticky":true,
-  "unAuth":true,
-  "origins":[],
+  "main": "./bin/worker.js",
+  "warnLog": "chatroom-warn.log",
+  "errorLog": "chatroom-error.log",
+  "key": "f840d80441836ae522f5f8a4390aa0bdade8bd27ecf4ca31965a58d9a6782abe",
+  "isSticky": true,
+  "unAuth": true,
+  "origins": [],
   "scripts": {
     "prestart": "npm install",
     "start": "nohup node ./bin/worker.js > start.log &",
-    "pretest":"istanbul cover node_modules/mocha/bin/_mocha",
+    "pretest": "istanbul cover node_modules/mocha/bin/_mocha",
     "test": "./node_modules/.bin/mocha --recursive -R xunit test/ >test-reports.xml && istanbul report cobertura && istanbul report clover"
   }
 }

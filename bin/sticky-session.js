@@ -128,6 +128,7 @@ module.exports = function sticky(num, callback) {
       if (msg !== 'sticky-session:connection') {
         return;
       }
+      // TODO: 只能在node v4版本使用，v6无法使用
       server.emit('connection', socket);
     });
 
@@ -136,6 +137,7 @@ module.exports = function sticky(num, callback) {
     // Monkey patch server to do not bind to port
     var oldListen = server.listen;
     server.listen = function listen() {
+      console.log(444444)
       var lastArg = arguments[arguments.length - 1];
 
       if (typeof lastArg === 'function') lastArg();

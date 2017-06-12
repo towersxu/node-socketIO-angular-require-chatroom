@@ -5,7 +5,12 @@ var Q = require('q');
 var redis = require("redis"),
   client = redis.createClient();
 /*包括broadcaster和manager*/
-
+/**
+ *根据socketid,判断该用户在该房间是否有操作权限
+ * @param socketId
+ * @param rId 房间id
+ * @returns {*|promise}
+ */
 function socketLevel(socketId, rId) {
   var deferred = Q.defer();
   var level = 0;
@@ -18,6 +23,12 @@ function socketLevel(socketId, rId) {
   });
   return deferred.promise;
 }
+/**
+ * 获取用户在该房间的角色等级(主播,管理员,用户,游客)
+ * @param uId
+ * @param rId
+ * @returns {*|promise}
+ */
 function userLevel(uId, rId) {
   var deferred = Q.defer();
   client.hget(['users',uId],function(err,data) {
