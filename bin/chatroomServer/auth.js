@@ -7,10 +7,9 @@ var Q = require('q');
 function post(data,path){
   var opt = {
     method: "POST",
-    //host: "chewchew.tv",
-    host: "test.cxria.com",
+    host: "",
     port: 80,
-    path: path || "/v/j/im/v",
+    path: path,
     headers: {
       "Content-Type": 'application/json'
     }
